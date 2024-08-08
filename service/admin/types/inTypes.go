@@ -27,5 +27,5 @@ type TypeDetailReq struct {
 	PageSize  int    `json:"pageSize"`
 	StartTime string `json:"startTime"`
 	EndTime   string `json:"endTime"`
-	Sort      string `json:"sort"`
+	Settle    int    `json:"settle"`
 }

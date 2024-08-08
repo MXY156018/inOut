@@ -222,8 +222,8 @@ func (l *In) InGetTypeDetail(req *types.TypeDetailReq) *api.BaseResp {
 		}
 		db = db.Where("date >= ? && date<?", startTime, endTime)
 	}
-	if req.Sort != "" {
-		db = db.Order(req.Sort)
+	if req.Settle != -1 {
+		db = db.Where("is_settle = ?", req.Settle)
 	}
 	err := db.Count(&count).Offset(offset).Limit(limit).Order("date desc").Find(&data).Error
 	if err != nil {
