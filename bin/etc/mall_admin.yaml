@@ -23,7 +23,7 @@ api:
     config: charset=utf8mb4&parseTime=True&loc=Local
     dbname: inout
     username: root
-    password: "123456"
+    password: "MM156018mm!@#"
     maxIdleConns: 10
     maxOpenConns: 5
     logMode: ""
