@@ -1,0 +1,29 @@
+2023/12/30 - 19:40:52.433	[31merror[0m	D:/MXY/git/mall/service/admin/api/internal/logic/base.go:68		{"error": "invalid connection"}
+mall-admin/api/internal/logic.(*Base).Login
+	D:/MXY/git/mall/service/admin/api/internal/logic/base.go:68
+mall-admin/api/internal/handler.(*Base).Login.func1
+	D:/MXY/git/mall/service/admin/api/internal/handler/base.go:44
+net/http.HandlerFunc.ServeHTTP
+	D:/Environment/Go/src/net/http/server.go:2084
+mall-pkg/api.(*CorsMiddleware).Handle.func1
+	D:/MXY/git/mall/pkg/api/cors.go:33
+net/http.HandlerFunc.ServeHTTP
+	D:/Environment/Go/src/net/http/server.go:2084
+github.com/zeromicro/go-zero/rest/handler.GunzipHandler.func1
+	D:/MXY/GoPath/pkg/mod/github.com/zeromicro/go-zero@v1.5.2/rest/handler/gunziphandler.go:26
+net/http.HandlerFunc.ServeHTTP
+	D:/Environment/Go/src/net/http/server.go:2084
+github.com/zeromicro/go-zero/rest/handler.MaxBytesHandler.func2.1
+	D:/MXY/GoPath/pkg/mod/github.com/zeromicro/go-zero@v1.5.2/rest/handler/maxbyteshandler.go:24
+net/http.HandlerFunc.ServeHTTP
+	D:/Environment/Go/src/net/http/server.go:2084
+github.com/zeromicro/go-zero/rest/handler.MetricHandler.func1.1
+	D:/MXY/GoPath/pkg/mod/github.com/zeromicro/go-zero@v1.5.2/rest/handler/metrichandler.go:21
+net/http.HandlerFunc.ServeHTTP
+	D:/Environment/Go/src/net/http/server.go:2084
+github.com/zeromicro/go-zero/rest/handler.RecoverHandler.func1
+	D:/MXY/GoPath/pkg/mod/github.com/zeromicro/go-zero@v1.5.2/rest/handler/recoverhandler.go:21
+net/http.HandlerFunc.ServeHTTP
+	D:/Environment/Go/src/net/http/server.go:2084
+github.com/zeromicro/go-zero/rest/handler.(*timeoutHandler).ServeHTTP.func1
+	D:/MXY/GoPath/pkg/mod/github.com/zeromicro/go-zero@v1.5.2/rest/handler/timeouthandler.go:81

@@ -1,0 +1,2 @@
+2024/07/09 - 09:20:16.127	[31merror[0m	D:/MXY/git/mall/service/order/api/internal/svc/orderstatemgr.go:614	超时检查-订单未发货	{"订单ID": 170}
+2024/07/09 - 09:35:17.132	[31merror[0m	D:/MXY/git/mall/service/order/api/internal/svc/orderstatemgr.go:614	超时检查-订单未发货	{"订单ID": 170}

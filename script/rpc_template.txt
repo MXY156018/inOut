@@ -1,0 +1,4 @@
+# RPC 模板代码生成指令
+
+goctl rpc template -o xxx.proto
+goctl rpc protoc xxx.proto --go_out=. --go-grpc_out=. --zrpc_out=.

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package admin;
+option go_package="./admin";
+
+// 接口
+message apiAuthReq {
+  // 路径
+  string path = 1;
+  //方法名
+  string method = 2;
+  //角色
+  string authorityId = 3;
+
+}
+
+message apiAuthResp {
+  // 错误码,0为成功
+  int32 code  = 1;
+  // 错误信息
+  string message = 2;
+}
+
+service auth {
+  // api 授权
+  rpc apiAuth(apiAuthReq) returns(apiAuthResp);
+}

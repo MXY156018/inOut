@@ -1,0 +1,34 @@
+Name: user.rpc
+ListenOn: 127.0.0.1:10011
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: 
+
+Log:
+  Level: "error"
+
+casbin: 
+  modelPath: "etc/rbac_model.conf"
+zap:
+  level: error
+  format: console
+  prefix: '[user_rpc]'
+  director: ./log/user_rpc/
+  linkName: latest_back_log
+  showLine: true
+  encodeLevel: LowercaseColorLevelEncoder
+  stacktraceKey: stacktrace
+  logInConsole: false
+
+mysql:
+  path: 127.0.0.1:3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  dbname: mall_admin
+  username: root
+  password: "123456"
+  maxIdleConns: 10
+  maxOpenConns: 5
+  logMode: ""
+  logZap: True
+

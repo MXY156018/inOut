@@ -1,0 +1,50 @@
+api:
+  Name: admin.api
+  Host: 127.0.0.1
+  Port: 10000
+  Log:
+    Level: "error"
+  jwt:
+    secret: "mall_jwt_admin:9nmjh3829hfsdflwe/<./de"
+    expiresTime: 604800
+    bufferTime:  86400
+  zap:
+    level: error
+    format: console
+    prefix: '[admin_core]'
+    director: ./log/admin_core/
+    linkName: latest_back_log
+    showLine: true
+    encodeLevel: LowercaseColorLevelEncoder
+    stacktraceKey: stacktrace
+    logInConsole: false
+  mysql:
+    path: 127.0.0.1:3306
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    dbname: inout
+    username: root
+    password: "123456"
+    maxIdleConns: 10
+    maxOpenConns: 5
+    logMode: ""
+    logZap: True
+  redis:
+    db: 0
+    addr: 127.0.0.1:6379
+    password:
+  captcha:
+    keyLong: 6
+    imgWidth: 240
+    imgHeight: 80
+    maxSkew: 0.7
+    dotCount: 80
+  casbin:
+    modelPath: "etc/rbac_model.conf"
+  defaultPassword: "123456"
+rpc:
+  Name: admin.rpc
+  ListenOn: 127.0.0.1:10001
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: admin.rpc

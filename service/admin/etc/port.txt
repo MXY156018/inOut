@@ -1,0 +1,12 @@
+端口使用说明
+
+10000 admin_core api
+10001 admin_core grpc
+10002 product api 
+10003 product rpc
+10004 user api 
+10005 user rpc
+10006 order api 
+10007 order rpc 
+10008 message api 
+10009 message rpc 

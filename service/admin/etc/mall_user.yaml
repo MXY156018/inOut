@@ -1,0 +1,80 @@
+api:
+  Name: user.api
+  Host: 127.0.0.1
+  Port: 10004
+  Log:
+    Level: "error"
+
+  adminJwt:
+    secret: "mall_jwt_admin:9nmjh3829hfsdflwe/<./de"
+    expiresTime: 604800
+    bufferTime:  86400
+  userJwt:
+    secret: "mall_jwt_usr:$23546fkgnlflekwl&%>dkf"
+    expiresTime: 604800
+    bufferTime:  86400
+  merchantJwt:
+    secret: "mall_jwt_mchr509klg*676d32mcmMKFMEfer"
+    expiresTime: 604800
+    bufferTime:  86400
+    
+  zap:
+    level: error
+    format: console
+    prefix: '[mall_user]'
+    director: ./log/mall_user/
+    linkName: latest_back_log
+    showLine: true
+    encodeLevel: LowercaseColorLevelEncoder
+    stacktraceKey: stacktrace
+    logInConsole: false
+
+  mysql:
+    path: 127.0.0.1:3306
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    dbname: mall_user
+    username: root
+    password: "123456"
+    maxIdleConns: 10
+    maxOpenConns: 5
+    logMode: ""
+    logZap: True
+
+  redis:
+    db: 0
+    addr: 127.0.0.1:6379
+    password:
+  
+  wechat:
+    officialAppID: 'wxeec20a3ca0911dd8'
+    officialAppSecret: '592a0d2dd8262d85624a3c633fa755a1'
+    officialToken: 'ad324030nkldfheuruqcshuoe'
+    officialEncodingAESKey: 'TG5ae071hmayt7u2fde8NOkwXMW6KMBZNteVXr7x2md'
+    qrCodeExpire: 3600
+    merchantMinProgramAppId: 'wxb06d3522ccad923b'
+    merchantMinProgramAppSecret: '3c0a660bac59cc42d7be02ae52ded795'
+    mallMiniProgramAppId: 'wx8be0ec74defc196e'
+    mallMiniProgramAppSecret: '285df99d8a8ce4a38a4d82843273b281'
+    mallMpSharePage: 'pages/login/login'
+    mallMinPrograms:
+      -
+        appId: wx2d9c5ec3cd1caaa4
+        appSecret: a86ea66aeebd259e1cbd54483bc2e8fb
+
+  local:
+    path: "uploads/mall_user"
+    origin: "http://127.0.0.1:10010"
+
+  # adminauth rpc
+  rpcAdminAuth:
+    Etcd:
+      Hosts:
+        - localhost:2379
+      Key: admin.rpc
+rpc:
+  Name: user.rpc
+  ListenOn: 127.0.0.1:10005
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc
