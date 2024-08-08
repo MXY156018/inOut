@@ -1,0 +1,62 @@
+api:
+  Name: message.api
+  Host: 127.0.0.1
+  Port: 10008
+  Log:
+    Level: "error"
+
+  adminJwt:
+    secret: "mall_jwt_admin:9nmjh3829hfsdflwe/<./de"
+    expiresTime: 604800
+    bufferTime:  86400
+  userJwt:
+    secret: "mall_jwt_usr:$23546fkgnlflekwl&%>dkf"
+    expiresTime: 604800
+    bufferTime:  86400
+
+  zap:
+    level: error
+    format: console
+    prefix: '[mall_message]'
+    director: ./log/mall_message/
+    linkName: latest_back_log
+    showLine: true
+    encodeLevel: LowercaseColorLevelEncoder
+    stacktraceKey: stacktrace
+    logInConsole: false
+
+  mysql:
+    path: 127.0.0.1:3306
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    dbname: mall_message
+    username: root
+    password: "123456"
+    maxIdleConns: 10
+    maxOpenConns: 5
+    logMode: ""
+    logZap: True
+  
+  redis:
+    db: 0
+    addr: 127.0.0.1:6379
+    password:
+
+  # 文件存储
+  maxUploadBytes: "10M"
+  ossType: local
+  local:
+    path: "uploads/mall_message"
+    origin: "http://127.0.0.1:10008"
+
+  rpcAdminAuth:
+    Etcd:
+      Hosts:
+        - localhost:2379
+      Key: admin.rpc
+rpc:
+  Name: message.rpc
+  ListenOn: 127.0.0.1:10009
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: message.rpc

@@ -1,0 +1,113 @@
+api:
+  Name: product.api
+  Host: 127.0.0.1
+  Port: 10006
+  Log:
+    Level: "error"
+
+  adminJwt:
+    secret: "mall_jwt_admin:9nmjh3829hfsdflwe/<./de"
+    expiresTime: 604800
+    bufferTime:  86400
+  userJwt:
+    secret: "mall_jwt_usr:$23546fkgnlflekwl&%>dkf"
+    expiresTime: 604800
+    bufferTime:  86400
+  merchantJwt:
+    secret: "mall_jwt_mchr509klg*676d32mcmMKFMEfer"
+    expiresTime: 604800
+    bufferTime:  86400
+
+  zap:
+    level: error
+    format: console
+    prefix: '[mall_order]'
+    director: ./log/mall_order/
+    linkName: latest_back_log
+    showLine: true
+    encodeLevel: LowercaseColorLevelEncoder
+    stacktraceKey: stacktrace
+    logInConsole: false
+
+  mysql:
+    path: 127.0.0.1:3306
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    dbname: mall_top_order
+    username: root
+    password: "123456"
+    maxIdleConns: 10
+    maxOpenConns: 5
+    logMode: ""
+    logZap: True
+  
+  redis:
+    db: 0
+    addr: 127.0.0.1:6379
+    password:
+
+  rpcAdminAuth:
+    Etcd:
+      Hosts:
+        - localhost:2379
+      Key: admin.rpc
+  rpcProduct:
+    Etcd:
+      Hosts:
+        - localhost:2379
+      Key: product.rpc
+  rpcUser:
+    Etcd:
+      Hosts:
+        - localhost:2379
+      Key: user.rpc
+  express:
+    host: https://kop.kuaidihelp.com/api
+    appId: '112984'
+    apiKey: 'a0539b4155435628d083df5f66074d7326305cf4'
+    agentId: "9673886894074948"
+  easyPrint:
+    # host: http://39.100.208.228:8080/router/api
+    host: https://open.1dadan.com/router/api 
+    # shopId: 6700004000001341
+    shopId: 6800004213838824 #正式
+    clientId: fs20060028
+    # clientSecret: xnJvT4CDlDYqlT3ecAGSUxaf4D0RdQYr
+    clientSecret: pYdmFt0u9LsoJBNBK60DvYviwcs9kJAH #正式
+    format: json
+    partnerId: foonsu-sdk-java-20210118
+    v: '1.0'
+  wechat:
+    ocAppid: #公众号 appId
+    mpAppid: #小程序 appId
+    payMchid: #支付商户ID
+    payCallback: #支付回调地址
+    refundCallback: #退款回调
+    payOrderTimeout: 300 #支付订单超时时间 (秒)
+    payAPIv3Key: #商户APIv3密钥
+    payCertSN: #商户证书序列号
+    payPrivateKey: #私钥存储路径
+    payPem: # cert 文件路径
+    merchantMinProgramAppId: 'wxb06d3522ccad923b' #商户微信小程序 app id
+    merchantMinProgramAppSecret: '' #商户微信小程序 appsecret
+    merchantMpTmpId: 'DyqIwfR92aq_l657E3UceyPqJMuJDRCTjoCZDntIcEk' #小程序订阅模板
+    merchantMpTmpKeyThing: 'thing6' #订阅消息商品字段 thing6
+    merchantMpTmpKeyDate: 'date8' #订阅消息日期字段 date8
+    merchantMpType: 'developer' # developer 为开发版；trial为体验版；formal为正式版；默认为正式版
+
+  # 订单超时时间
+  orderTimeout: 86400
+  # 自动收货时间(10天)
+  autoReceive: 864000
+  maxUploadBytes: "20M"
+  ossType: local
+  local:
+    path: "uploads/mall_top_order"
+    origin: "http://127.0.0.1:10006"
+
+rpc:
+  Name: order.rpc
+  ListenOn: 127.0.0.1:10007
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: order.rpc
