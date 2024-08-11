@@ -132,8 +132,10 @@ func (l *In) GetInRecords(req *types.GetRecordsReq) *api.BaseResp {
 	}
 	if req.Sort != "" {
 		db = db.Order(req.Sort)
+	} else {
+		db = db.Order("date desc")
 	}
-	err := db.Count(&count).Offset(offset).Limit(limit).Order("date desc").Find(&data).Error
+	err := db.Count(&count).Offset(offset).Limit(limit).Find(&data).Error
 	if err != nil {
 		l.sCtx.Log.Error("查询失败", zap.Error(err))
 		resp.Code = api.Error_Server
@@ -238,6 +240,157 @@ func (l *In) InGetTypeDetail(req *types.TypeDetailReq) *api.BaseResp {
 		List:     data,
 		Page:     req.Page,
 		PageSize: req.PageSize,
+	}
+	return resp
+}
+
+func (l *In) InGetById(req *api.IDReq) *api.BaseResp {
+	var resp = &api.BaseResp{}
+	if req.ID == 0 {
+		resp.Code = api.Error_Server
+		resp.Msg = "id不能为空"
+		return resp
+	}
+	var data model.InRecords
+	err := l.sCtx.DB.Model(&data).Where("id = ?", req.ID).Find(&data).Error
+	if err != nil {
+		l.sCtx.Log.Error("查询失败", zap.Error(err))
+		resp.Code = api.Error_Server
+		resp.Msg = "查询失败"
+	}
+	resp.Code = api.Error_OK
+	resp.Data = data
+	return resp
+}
+func (l *In) InUpdateById(req *model.InRecords) *api.BaseResp {
+	var resp = &api.BaseResp{}
+	if req.Id == 0 {
+		resp.Code = api.Error_Server
+		resp.Msg = "id不能为空"
+		return resp
+	}
+	var data model.InRecords
+	err := l.sCtx.DB.Model(&data).Where("id = ?", req.Id).Find(&data).Error
+	if err != nil {
+		l.sCtx.Log.Error("查询失败", zap.Error(err))
+		resp.Code = api.Error_Server
+		resp.Msg = "查询失败"
+	}
+	if req.Settle > data.Sum {
+		resp.Code = api.Error_Server
+		resp.Msg = "结算金额不能大于总金额"
+		return resp
+	}
+	update := req.Settle - data.Settle
+	if req.IsSettle == 1 && req.Settle != data.Sum {
+		//结算金额发生变化
+		resp.Code = api.Error_Server
+		resp.Msg = "结算金额错误"
+		return resp
+	} else {
+		if req.IsSettle == 2 && req.Settle > data.Sum-data.Settle {
+			resp.Code = api.Error_Server
+			resp.Msg = "结算金额错误"
+			return resp
+		} else if req.IsSettle == 2 && req.Settle == data.Sum {
+			resp.Code = api.Error_Server
+			resp.Msg = "应选已结账"
+			return resp
+		}
+	}
+	err = l.sCtx.DB.Transaction(func(tx *gorm.DB) error {
+		merr := tx.Model(&data).Where("id = ?", req.Id).Updates(req).Error
+		if err != nil {
+			return merr
+		}
+		month := data.Date.Format("2006-01")
+		merr = tx.Clauses(clause.OnConflict{
+			Columns: []clause.Column{{Name: "date"}},
+			DoUpdates: clause.Assignments(map[string]interface{}{
+				"money": gorm.Expr("money+?", update),
+			}),
+		}).Create(&model.InDay{
+			Date:  data.Date,
+			Money: float32(req.Settle),
+		}).Error
+		if err != nil {
+			return merr
+		}
+		merr = tx.Clauses(clause.OnConflict{
+			Columns: []clause.Column{{Name: "date"}},
+			DoUpdates: clause.Assignments(map[string]interface{}{
+				"money": gorm.Expr("money+?", update),
+			}),
+		}).Create(&model.InMonth{
+			Date:  month,
+			Money: float32(req.Settle),
+		}).Error
+		if err != nil {
+			return merr
+		}
+		return nil
+	})
+
+	if err != nil {
+		l.sCtx.Log.Error("更新失败", zap.Error(err))
+		resp.Code = api.Error_Server
+		resp.Msg = "更新失败"
+	}
+	resp.Code = api.Error_OK
+	resp.Msg = "更新成功"
+	return resp
+}
+func (l *In) GetInSum(req *types.Date) *api.BaseResp {
+	var resp = &api.BaseResp{}
+	var data []model.InRecords
+	db := l.sCtx.DB.Model(&data)
+	if req.StartTime == "" && req.EndTime == "" {
+		start, end := utils.GetTodayDateTime(time.Now())
+		db = db.Where("date >= ? and date<?", start, end)
+	} else {
+		startTime, err := utils.StringToTime(req.StartTime)
+		if err != nil {
+			resp.Code = api.Error_Server
+			resp.Msg = "时间格式错误"
+			return resp
+		}
+		endTime, err := utils.StringToTime(req.EndTime)
+		if err != nil {
+			resp.Code = api.Error_Server
+			resp.Msg = "时间格式错误"
+			return resp
+		}
+		db = db.Where("date >= ? && date<?", startTime, endTime)
+	}
+	err := db.Find(&data).Error
+	if err != nil {
+		l.sCtx.Log.Error("查询失败", zap.Error(err))
+		resp.Code = api.Error_Server
+		resp.Msg = "查询失败"
+		return resp
+	}
+	var total, unsettle, finish, unfinish, unfinish_settle = 0.0, 0.0, 0.0, 0.0, 0.0
+
+	for _, v := range data {
+
+		total += float64(v.Sum)
+		if v.IsSettle == 0 {
+			unsettle += float64(v.Sum)
+		} else if v.IsSettle == 1 {
+			finish += float64(v.Settle)
+		} else if v.IsSettle == 2 {
+			unfinish += float64(v.Sum - v.Settle)
+			unfinish_settle += float64(v.Settle)
+		}
+
+	}
+	resp.Code = api.Error_OK
+	resp.Data = types.InSumResp{
+		Total:          total,
+		UnSettle:       unsettle,
+		Finish:         finish,
+		UnFinish:       unfinish,
+		UnFinishSettle: unfinish_settle,
 	}
 	return resp
 }

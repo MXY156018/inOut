@@ -58,6 +58,15 @@ func GetTodayUnix(date time.Time) (int64, int64) {
 	return Datetime2TimeObj(today.Format("2006-01-02")+" 00:00:00", defaultFormat).Unix(), Datetime2TimeObj(today.Format("2006-01-02")+" 23:59:59", defaultFormat).Unix()
 }
 
+//获取本日日期
+func GetTodayDateTime(date time.Time) (time.Time, time.Time) {
+	currentYear, currentMonth, currentDay := date.Date()
+	currentLocation := date.Location()
+	today := time.Date(currentYear, currentMonth, currentDay, 0, 0, 0, 0, currentLocation)
+	defaultFormat := DatetimeFmt
+	return Datetime2TimeObj(today.Format("2006-01-02")+" 00:00:00", defaultFormat), Datetime2TimeObj(today.Format("2006-01-02")+" 23:59:59", defaultFormat)
+}
+
 // Datetime2TimeObj
 func Datetime2TimeObj(target string, format ...string) time.Time {
 	defaultFormat := DatetimeFmt

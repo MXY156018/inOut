@@ -12,6 +12,7 @@ type GetRecordsReq struct {
 	Sort      string `json:"sort"`
 }
 type InRecordReq struct {
+	Id       int8    `json:"id,omitempty"`
 	Type     string  `json:"type"`
 	TypeId   int32   `json:"type_id"`
 	Weight   float32 `json:"weight"`
@@ -28,4 +29,17 @@ type TypeDetailReq struct {
 	StartTime string `json:"startTime"`
 	EndTime   string `json:"endTime"`
 	Settle    int    `json:"settle"`
+}
+
+type InSumResp struct {
+	Total          float64 `json:"total"`
+	UnSettle       float64 `json:"unsettle"`
+	Finish         float64 `json:"finish"`
+	UnFinish       float64 `json:"unfinish"`
+	UnFinishSettle float64 `json:"unfinish_settle"`
+}
+
+type Date struct {
+	StartTime string `json:"startTime"`
+	EndTime   string `json:"endTime"`
 }

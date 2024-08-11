@@ -3,6 +3,7 @@ package handler
 import (
 	"mall-admin/api/internal/logic"
 	"mall-admin/api/internal/svc"
+	"mall-admin/model"
 	"mall-admin/types"
 	"mall-pkg/api"
 	"mall-pkg/utils"
@@ -20,9 +21,12 @@ func (l *In) Router(engine *rest.Server, ctx *svc.ServiceContext) {
 	{
 		r.Post("/in/add", l.InAdd(ctx))
 		r.Post("/in/get", l.InGet(ctx))
+		r.Post("/in/getById", l.InGetById(ctx))
+		r.Post("/in/updateById", l.InUpdateById(ctx))
 		r.Post("/in/del", l.InDel(ctx))
 		r.Post("/in/getType", l.InGetType(ctx))
 		r.Post("/in/getTypeDetail", l.InGetTypeDetail(ctx))
+		r.Post("/in/getInSum", l.InSum(ctx))
 	}
 }
 
@@ -84,6 +88,42 @@ func (l *In) InGetTypeDetail(ctx *svc.ServiceContext) http.HandlerFunc {
 		}
 		l := logic.NewIn(r.Context(), ctx)
 		resp := l.InGetTypeDetail(&req)
+		httpx.OkJson(w, resp)
+	}
+}
+func (l *In) InGetById(ctx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req api.IDReq
+		if err := utils.Bind(r, &req); err != nil {
+			httpx.OkJson(w, api.NewInvalidParameter(err.Error()))
+			return
+		}
+		l := logic.NewIn(r.Context(), ctx)
+		resp := l.InGetById(&req)
+		httpx.OkJson(w, resp)
+	}
+}
+func (l *In) InUpdateById(ctx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req model.InRecords
+		if err := utils.Bind(r, &req); err != nil {
+			httpx.OkJson(w, api.NewInvalidParameter(err.Error()))
+			return
+		}
+		l := logic.NewIn(r.Context(), ctx)
+		resp := l.InUpdateById(&req)
+		httpx.OkJson(w, resp)
+	}
+}
+func (l *In) InSum(ctx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.Date
+		if err := utils.Bind(r, &req); err != nil {
+			httpx.OkJson(w, api.NewInvalidParameter(err.Error()))
+			return
+		}
+		l := logic.NewIn(r.Context(), ctx)
+		resp := l.GetInSum(&req)
 		httpx.OkJson(w, resp)
 	}
 }

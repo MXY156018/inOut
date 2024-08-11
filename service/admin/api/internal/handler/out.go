@@ -21,6 +21,7 @@ func (l *Out) Router(engine *rest.Server, ctx *svc.ServiceContext) {
 		r.Post("/out/add", l.OutAdd(ctx))
 		r.Post("/out/get", l.OutGet(ctx))
 		r.Post("/out/del", l.OutDel(ctx))
+		r.Post("/out/getOutSum", l.OutSum(ctx))
 	}
 }
 
@@ -62,6 +63,19 @@ func (l *Out) OutDel(ctx *svc.ServiceContext) http.HandlerFunc {
 		}
 		l := logic.NewOut(r.Context(), ctx)
 		resp := l.DelOutRecords(&req)
+		httpx.OkJson(w, resp)
+	}
+}
+// 收货统计
+func (l *Out) OutSum(ctx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.Date
+		if err := utils.Bind(r, &req); err != nil {
+			httpx.OkJson(w, api.NewInvalidParameter(err.Error()))
+			return
+		}
+		l := logic.NewOut(r.Context(), ctx)
+		resp := l.GetOutSum(&req)
 		httpx.OkJson(w, resp)
 	}
 }

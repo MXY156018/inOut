@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"database/sql"
 	"mall-admin/api/internal/svc"
 	"mall-admin/model"
 	"mall-admin/types"
@@ -171,5 +172,37 @@ func (l *Out) DelOutRecords(req *api.IDReq) *api.BaseResp {
 	}
 	resp.Code = api.Error_OK
 	resp.Msg = "删除成功"
+	return resp
+}
+func (l *Out) GetOutSum(req *types.Date) *api.BaseResp {
+	var resp = &api.BaseResp{}
+	db := l.sCtx.DB.Model(&model.OutDay{})
+	if req.StartTime == "" && req.EndTime == "" {
+		db = db.Where("date = ?", time.Now().Format("2006-01-02"))
+	} else {
+		startTime, err := utils.StringToTime(req.StartTime)
+		if err != nil {
+			resp.Code = api.Error_Server
+			resp.Msg = "时间格式错误"
+			return resp
+		}
+		endTime, err := utils.StringToTime(req.EndTime)
+		if err != nil {
+			resp.Code = api.Error_Server
+			resp.Msg = "时间格式错误"
+			return resp
+		}
+		db = db.Where("date >= ? && date<?", startTime, endTime)
+	}
+	var sum sql.NullFloat64
+	err := db.Select("sum(money)").Scan(&sum).Error
+	if err != nil {
+		l.sCtx.Log.Error("查询失败", zap.Error(err))
+		resp.Code = api.Error_Server
+		resp.Msg = "查询失败"
+		return resp
+	}
+	resp.Code = api.Error_OK
+	resp.Data = sum.Float64
 	return resp
 }
